@@ -93,14 +93,25 @@ function resetPage(){
 }
 
 function renderPage(){
-    let words = gameData.text.split(" ")
-    for(let i=0; i<words.length; i++){
-        // console.log(words[i])
-        const word = words[i];
-        const span = document.createElement('span')
-        span.className = 'word'
-        span.textContent = word
-        textBox.appendChild(span)
-    }
+
+
+    fetch("https://baconipsum.com/api/?type=all-meat&paras=1&start-with-lorem=1")
+    .then(response => response.json())  // Convert the response to JSON
+    .then(data => {
+        gameData.text = data[0]
+        let words = gameData.text.split(" ").filter(itr=>itr!='')
+        gameData.totalWords = words.length
+        for(let i=0; i<words.length; i++){
+            const word = words[i];
+            const span = document.createElement('span')
+            span.className = 'word'
+            span.textContent = word
+            textBox.appendChild(span)
+        }
+    
+    })
+    .catch(error => {
+        console.error('Error:', error);  // Handle any errors
+    });
 }
 renderPage()
